@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件委托</title>
+	<style>
+		html, body, div, ul, li, p, span, input {
+			margin: 0;
+			padding: 0;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		ul {
+			list-style-type: none;
+		}
+		.box {
+			width: 350px;
+			height: auto;
+			border: 1px solid #E4DDDD;
+			overflow: hidden;
+			margin: auto;
+			margin-top: 20px;
+		}
+		.box input {
+			background: #1BB8E7;
+			border: none;
+			display: block;
+			margin: 10px auto;
+			padding: 8px 15px;
+			border-radius: 5px;
+			color: #fff;
+		}
+		.box ul li {
+			width: 100%;
+			padding: 15px 5%;
+			border-bottom: 1px solid #999;
+			cursor: pointer;
+			transition: background 0.5s, color 0.2s;
+			position: relative;
+			margin-top: 20px;
+		}
+		.box ul li div {
+			width: 100%;
+			height: 100%;
+			cursor: pointer;
+			background: #B4FCFA;
+		}
+		.box ul li:hover {
+			background: #ECECEC;
+		}
+		.box ul li:active {
+			color: #F97308;
+		}
+		.box ul li .btn-edit {
+			position: absolute;
+			top: 15px;
+			right: 30px;
+			display: block;
+			font-size: 12px;
+			padding: 3px 8px;
+			border-radius: 3px;
+			background: #0E96E1;
+			color: #fff;
+		}
+		.box p {
+			margin-top: 30px;
+			background: #EEF34F;
+			/*height: 30px;*/
+			line-height: 30px;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<input type="button" value="添加">
+		<ul>
+			<li data-id="inner"><div>国内新闻列表，点击查看国内新闻</div><span class="btn-edit">关注</span></li>
+			<li data-id="international">国际新闻列表，点击查看国际新闻</li>
+			<li data-id="sport">体育新闻列表，点击查看体育新闻</li>
+			<li data-id="fun">娱乐新闻列表，点击查看娱乐新闻</li>
+			<li data-id="tech">教育新闻列表，点击查看教育新闻</li>
+		</ul>
+		<p>显示内容区域</p>
+	</div>
+
+	<script>
+		var oBtn = document.querySelector('input'),
+			oUl = document.querySelector('ul'),
+			oP = document.querySelector('p');
+		var num = 0;
+
+		//遍历li
+		// function liClick() {
+		// 	oLis = oUl.querySelectorAll('li');
+		// 	for(var i=0; i<oLis.length; i++) {
+		// 		oLis[i].onclick = function() {
+		// 			oP.innerHTML = this.innerHTML;
+		// 		};
+		// 	}
+		// }
+		// liClick();
+
+		//事件委托
+		oUl.onclick = function(e) {
+			e = e || window.event;
+			var target = e.target || e.srcElement;
+			while(target !== oUl) {
+				if(target.nodeName.toLowerCase() == 'li') {
+					oP.innerHTML = target.innerHTML + ' ' + target.getAttribute('data-id');
+					break;
+				} else if (target.className == 'btn-edit') {
+					oP.innerHTML = '您关注了: "' + target.parentNode.querySelector('div').innerHTML + '"';
+					break;
+				}
+				target = target.parentNode;
+			}
+			// if(target.nodeName.toLowerCase() == 'li') {
+			// 	oP.innerHTML = target.innerHTML + ' ' + target.getAttribute('data-id');
+			// }
+		};
+
+		oBtn.onclick = function() {
+			num++;
+			var newLi = document.createElement('li');
+			newLi.innerHTML = '这是新添加的列表-' + num;
+			newLi.setAttribute('data-id', 'data-id:' + num);
+			oUl.appendChild(newLi);
+			// liClick();
+		};
+	</script>
+</body>
+</html>
